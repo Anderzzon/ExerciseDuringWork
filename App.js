@@ -14,7 +14,7 @@ const ListItem = ({title}) => {
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <ListItem title = {"hej"}/>
       <StatusBar style="auto" />
     </View>
   );
@@ -27,5 +27,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  listItem: {
+    width: '100%',
+    alignContent: 'flex-start',
+    padding: 20,
+    backgroundColor: 'grey'
   },
 });

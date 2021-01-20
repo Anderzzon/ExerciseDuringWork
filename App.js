@@ -1,6 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const DATA = [
   {
@@ -21,45 +27,115 @@ const DATA = [
   },
 ]
 
+const Tab = createBottomTabNavigator();
+const ExcercisesStack = createStackNavigator();
+
+const ListScreen = (navigation) => {
+  return (
+    <SafeAreaView style={styles.container}>
+    <ActivityList navigation = {navigation}/>
+    <StatusBar style="auto" />
+  </SafeAreaView>
+  )
+}
+
+const ExcercisesStackScreen = () => {
+  return(
+  <ExcercisesStack.Navigator>
+    <ExcercisesStack.Screen name = "List" component = {ListScreen} />
+    <ExcercisesStack.Screen name = "Detail" component = {DetailScreen} />
+  </ExcercisesStack.Navigator>
+  )
+}
+
+const OverviewScreen = () => {
+  return (
+    <SafeAreaView style= {styles.container}>
+      <Overview/>
+      <StatusBar style="auto" />
+    </SafeAreaView>
+  )
+}
+
+const DetailScreen = () => {
+  return(
+    <SafeAreaView style= {styles.container}>
+      <DetailView id = {id}/>
+    </SafeAreaView>
+  )
+}
+
+const DetailView = (id) => {
+  return(
+    <Text>Detail of the activity with numer: {id}</Text>
+  )
+}
+
+const Overview = () => {
+  return (
+    <Text>Charts etc to come here</Text>
+  )
+}
+
 const ListItem = ({title, id}) => {
   return (
     <View style = {styles.listItem}    >
       <Text
-      onPress={() => console.log(id)}
+      onPress={() => {
+        console.log(id)
+        
+      }}
       >{title}</Text>
     </View>
   )
 }
 
-const ActivityList = () => {
-const renderItem = ({item}) => (
-  <ListItem title = {item.title}/>
-)
-const handlePress = ({item}) => {
-  console.log("ID: ", item.id)
-}
-
+const ActivityList = ({ navigation }) => {
   return (
     <FlatList style = {styles.activityList}
       data = {DATA}
       renderItem = {({item, index}) =>
-        <ListItem title = {item.title} id = {item.id}
-          onPress= {handlePress}
-          onPress={() => console.log("Hej")}
-        />
+        // <Text onPress = {() => navigation.push("DetailScreen")}>
+        //   {item.title}</Text>
+        <TouchableOpacity onPress = {() => {
+          console.log(item.id, " was pressed")
+          navigation.navigate('Detail')
       }
-      
-      
+        
+        }>
+          <ListItem title = {item.title} id = {item.id}/>
+        </TouchableOpacity>
+      }
       />
   )
 }
 
 export default function App() {
+  
   return (
-    <SafeAreaView style={styles.container}>
-      <ActivityList/>
-      <StatusBar style="auto" />
-    </SafeAreaView>
+
+      <NavigationContainer>
+        <Tab.Navigator
+        screenOptions= {({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Exercises') {
+              iconName = focused
+              ? 'body'
+              : 'body-outline';
+            } else if (route.name === 'Overview') {
+              iconName = focused ? 'ribbon' : 'ribbon-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        >
+          <Tab.Screen name = "Exercises" component = {ExcercisesStackScreen}/>
+          <Tab.Screen name = "Overview" component = {OverviewScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+
   );
 }
 

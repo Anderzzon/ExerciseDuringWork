@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, SafeAreaView, StyleSheet } from "react-native";
-import navigation from "../config/navigation";
 
 export default ({ route }) => {
 
@@ -13,13 +12,12 @@ export default ({ route }) => {
     )
 }
 
-const DetailView = ({ route, navigation }) => {
+const DetailView = ({ route }) => {
 
     const item  = route.params.item
 
     //console.log("Item", {activity})
     console.log("Route: ", {route} )
-    console.log("Route: ", {navigation} )
 
     return(
       <Text>Detail of the activity with title: {item.title} </Text>

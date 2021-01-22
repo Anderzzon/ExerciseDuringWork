@@ -11,6 +11,8 @@ import DATA from '../data/data';
       </TouchableOpacity>
     )
   }
+
+  const Separator = () => <View style={styles.separator} />;
   
   export default ({ navigation }) => {
     return (
@@ -29,6 +31,7 @@ import DATA from '../data/data';
             />
 
         }
+        ItemSeparatorComponent={Separator}
   
         />
     )
@@ -52,6 +55,11 @@ import DATA from '../data/data';
     },
   
     activityList: {
-      width: '100%'
-    }
+      width: '100%',
+      backgroundColor: 'white'
+    },
+    separator: {
+      backgroundColor: "#ececec",
+      height: 1
+    },
   });

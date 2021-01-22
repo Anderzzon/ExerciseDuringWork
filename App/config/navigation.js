@@ -24,9 +24,12 @@ const ExcercisesStackScreen = () => {
       component = {Detail} 
       options = {({ route }) => {
         return {
-            headerTitle: "Title"
+            headerTitle: `${route.params.item.title}`,
+            headerBackTitle: "Back"
         }
-      }}
+      }
+      
+    }
       />
     </ExcercisesStack.Navigator>
     )

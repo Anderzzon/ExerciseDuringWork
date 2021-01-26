@@ -1,6 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { FlatList, TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import DATA from '../data/data';
+//import exercises from '../../firebaseConfig'
+import {firebase} from '../../firebaseConfig'
+import { useState } from "react";
 
   const ListItem = ({title, id, onPress}) => {
     return (
@@ -15,12 +18,38 @@ import DATA from '../data/data';
   const Separator = () => <View style={styles.separator} />;
   
   export default ({ navigation }) => {
+
+    const [entities, setEntities] = useState([])
+    const db = firebase.firestore()
+    const exercises = db.collection('Exercises') 
+
+    useEffect(() => {
+      exercises
+        .onSnapshot(
+          snapshot => {
+            const newEntities = []
+            snapshot.forEach(doc => {
+              const entity = doc.data()
+              entity.id = doc.id
+              newEntities.push(entity)
+            })
+            setEntities(newEntities)
+            randomExcersise()
+          }
+        )
+    }, [])
+
+    const randomExcersise = () => {
+      const rand = entities[~~(Math.random() * entities.length)];
+      console.log("Random", rand)
+    }
+
     return (
       <FlatList style = {styles.activityList}
-        data = {DATA}
+        data = {entities}
         renderItem = {({item}) =>
             <ListItem 
-              title = {item.title} 
+              title = {item.name} 
               id = {item.id} 
               onPress = {() => {
                 navigation.navigate('Detail', {

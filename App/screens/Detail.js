@@ -1,5 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Text, SafeAreaView, StyleSheet } from "react-native";
+import { useState } from "react";
+import { exercises } from "../../firebaseConfig";
+import {firebase} from '../../firebaseConfig'
 
 export default ({ route }) => {
 
@@ -15,12 +18,27 @@ export default ({ route }) => {
 const DetailView = ({ route }) => {
 
     const item  = route.params.item
+    const [entity, setEntity] = useState("")
+
+    const db = firebase.firestore()
+    const exercise = db.collection('Exercises').doc(item.id)
+
+    useEffect(() => {
+      let list = []
+      exercise
+        .onSnapshot(
+          doc => {
+            setEntity(doc.data())
+            console.log("!!! Document: ", doc.data())
+          }
+        )
+    }, [])
 
     //console.log("Item", {activity})
     console.log("Route: ", {route} )
 
     return(
-      <Text>Detail of the activity with title: {item.title} </Text>
+      <Text>Detail of the activity with title: {entity.name} </Text>
     )
   }
 

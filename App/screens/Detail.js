@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { Text, SafeAreaView, StyleSheet } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, Image } from "react-native";
 import { useState } from "react";
 import { exercises } from "../../firebaseConfig";
 import {firebase} from '../../firebaseConfig'
@@ -18,18 +18,25 @@ export default ({ route }) => {
 const DetailView = ({ route }) => {
 
     const item  = route.params.item
-    const [entity, setEntity] = useState("")
+    const [entity, setEntity] = useState({
+        gif: "https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif",
+        name: "",
+    })
 
     const db = firebase.firestore()
     const exercise = db.collection('Exercises').doc(item.id)
 
     useEffect(() => {
-      let list = []
       exercise
         .onSnapshot(
           doc => {
-            setEntity(doc.data())
+            //setEntity(doc.data())
+            setEntity({
+              gif: doc.data().gif,
+              name: doc.data().name
+            })
             console.log("!!! Document: ", doc.data())
+            console.log("!!! Entity: ", entity.gif)
           }
         )
     }, [])
@@ -38,7 +45,11 @@ const DetailView = ({ route }) => {
     console.log("Route: ", {route} )
 
     return(
+      <View>
       <Text>Detail of the activity with title: {entity.name} </Text>
+      <Image source={{uri: `${entity.gif}`}}
+       style={{width: 400, height: 400}} />
+      </View>
     )
   }
 

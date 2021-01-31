@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { FlatList, TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import React, { useContext, useEffect, useRef } from "react";
+import { FlatList, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
 import DATA from '../data/data';
 //import exercises from '../../firebaseConfig'
 import { firebase } from '../../firebaseConfig'
@@ -9,7 +9,13 @@ import { AuthContext } from '../context/AuthContext';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 
-
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 const ListItem = ({ title, id, onPress }) => {
   return (
@@ -30,43 +36,76 @@ export default ({ navigation }) => {
   const exercises = db.collection('Exercises')
   const { user } = useContext(AuthContext);
 
-  registerForPushNotificationsAsync(user)
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
-  async function registerForPushNotificationsAsync(user) {
-    console.log("Getting token")
-    let token;
-    if (Constants.isDevice) {
-      console.log("Constants")
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log("Push token", token)
+  const createTwoButtonAlert = (data) => {
+  Alert.alert(
+    "Alert Title",
+    "My Alert Msg",
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      { text: "OK", onPress: () => 
 
-        var userToUpdate = db.collection("Users").doc(user.uid)
-
-        var setWithMerge = userToUpdate.set({
-          push_token: token
-        }, { merge: true } )
-      // db.collection("Users").doc(user.uid).set({
-      //   push_token: token,
-      // })
-      //   .then(function () {
-      //     console.log("Push token set")
-      //   })
-      //   .catch(function (error) {
-      //     console.error("Error writing document: ", error);
-      //   });
-
+                  navigation.navigate('Detail', {
+              item: {
+                name: data.name,
+                id: data.exercise
+              }
+            }),
+            style: "default" 
     }
-  }
+    ],
+    { cancelable: false }
+  )
+}
+
+  useEffect(() => {
+    registerForPushNotificationsAsync(user, db).then(token => setExpoPushToken(token))
+  }, []);
+
+  useEffect(() => {
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notificationData => {
+      setNotification(notificationData);
+      //console.log("Foreground: ", notificationData)
+      if (notification) {
+        createTwoButtonAlert(notificationData.request.content.data)
+        console.log("!!! Heh")
+      } else {
+        console.log("No notification data")
+      }
+
+    }, []);
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      //console.log("!!!Received response Context:", response);
+      let data = response.notification.request.content.data
+      //console.log("Exercise ID: ", data)
+      if (data.exercise) {
+        //console.log(data.exercise)
+        navigation.navigate('Detail', {
+          item: {
+            name: "Test from Notification",
+            id: data.exercise
+          }
+        })
+      }
+    }, [] );
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
 
   useEffect(() => {
     exercises
@@ -79,15 +118,10 @@ export default ({ navigation }) => {
             newEntities.push(entity)
           })
           setEntities(newEntities)
-          randomExcersise()
+          //randomExcersise()
         }
       )
   }, [])
-
-  const randomExcersise = () => {
-    var rand = entities[~~(Math.random() * entities.length)];
-    console.log("Random", rand)
-  }
 
   return (
     <FlatList style={styles.activityList}
@@ -106,9 +140,40 @@ export default ({ navigation }) => {
 
       }
       ItemSeparatorComponent={Separator}
-
     />
   )
+}
+
+// const randomExcersise = () => {
+//   var rand = entities[~~(Math.random() * entities.length)];
+//   console.log("Random", rand)
+// }
+
+async function registerForPushNotificationsAsync(user, db) {
+  console.log("Getting token")
+  let token;
+  if (Constants.isDevice) {
+    console.log("Constants")
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log("Push token", token)
+
+      var userToUpdate = db.collection("Users").doc(user.uid)
+
+      var setWithMerge = userToUpdate.set({
+        push_token: token
+      }, { merge: true } )
+  }
+  return token
 }
 
 const styles = StyleSheet.create({

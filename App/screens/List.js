@@ -87,6 +87,7 @@ export default ({ navigation }) => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notificationData => {
       setNotification(notificationData);
+      console.log("Notification:", notification)
       if (notification) {
         createTwoButtonAlert(notificationData.request.content.data)
         console.log("!!! Heh")
@@ -105,7 +106,7 @@ export default ({ navigation }) => {
         //console.log(data.exercise)
         navigation.navigate('Detail', {
           item: {
-            name: "Test from Notification",
+            name: data.name,
             id: data.exercise
           }
         })

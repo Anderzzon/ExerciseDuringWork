@@ -169,7 +169,7 @@ export default ({ route, navigation }) => {
           <TextInput 
           ref= {inputRef}
           style = {styles.countDown}
-          disabled={true}
+          editable = {false}
           defaultValue = {duration.toString()}
           />
         </Animated.View>

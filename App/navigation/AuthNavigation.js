@@ -5,6 +5,7 @@ import UnauthenticatedStack from './UnauthenticatedStack';
 import TabScreen from './ListNavigation'
 import { AuthContext } from '../context/AuthContext';
 import Splash from '../screens/Splash'
+import { navigationRef } from './RootNavigation';
 
 export default function AuthNavigation() {
   const { isLoading, isLoggedIn, user, exerciseFromNotification } = useContext(AuthContext);
@@ -14,8 +15,6 @@ export default function AuthNavigation() {
   }
 
   return (
-    <NavigationContainer>
-      {user ? <TabScreen /> : <UnauthenticatedStack />}
-    </NavigationContainer>
+    <NavigationContainer ref={navigationRef}>{user ? <TabScreen /> : <UnauthenticatedStack />}</NavigationContainer>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { FlatList, TouchableOpacity, View, Text, StyleSheet, Alert } from "react-native";
+import { FlatList, TouchableOpacity, View, Text, StyleSheet, Alert, StatusBar, Image } from "react-native";
 import DATA from '../data/data';
 //import exercises from '../../firebaseConfig'
 import { firebase } from '../../firebaseConfig'
@@ -8,6 +8,7 @@ import { AuthContext } from '../context/AuthContext';
 
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import { color } from "react-native-reanimated";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -17,11 +18,23 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const ListItem = ({ title, id, onPress }) => {
+const ListItem = ({ title, image, id, description, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.listItem}    >
-        <Text>{title}</Text>
+      <View style={styles.listItem}>
+        <View style= {{flexDirection: 'column', width: '70%'}}>
+        <Text style= {{
+          color: 'white', 
+          fontSize: 18,
+          fontWeight: 'bold'}}>{title}</Text>
+        <Text style= {{color: 'white', marginTop: 5}}>{description} </Text>
+        </View>
+
+        <Image source={{uri: `${image}`}}
+        style={{width: 60, 
+          height: 60, 
+          borderRadius: 150,
+          overflow: "hidden"}} />
       </View>
     </TouchableOpacity>
   )
@@ -71,11 +84,9 @@ export default ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notificationData => {
       setNotification(notificationData);
-      //console.log("Foreground: ", notificationData)
       if (notification) {
         createTwoButtonAlert(notificationData.request.content.data)
         console.log("!!! Heh")
@@ -118,17 +129,19 @@ export default ({ navigation }) => {
             newEntities.push(entity)
           })
           setEntities(newEntities)
-          //randomExcersise()
         }
       )
   }, [])
 
   return (
+    <View>
     <FlatList style={styles.activityList}
       data={entities}
       renderItem={({ item }) =>
         <ListItem
           title={item.name}
+          image={item.gif}
+          description= {item.description}
           id={item.id}
           onPress={() => {
             navigation.navigate('Detail', {
@@ -141,13 +154,10 @@ export default ({ navigation }) => {
       }
       ItemSeparatorComponent={Separator}
     />
+    <StatusBar barStyle="light-content"/>
+    </View>
   )
 }
-
-// const randomExcersise = () => {
-//   var rand = entities[~~(Math.random() * entities.length)];
-//   console.log("Random", rand)
-// }
 
 async function registerForPushNotificationsAsync(user, db) {
   console.log("Getting token")
@@ -179,7 +189,7 @@ async function registerForPushNotificationsAsync(user, db) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#323F4E',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -189,13 +199,16 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     padding: 20,
     margin: 5,
-    borderColor: 'grey',
-    borderWidth: 2
+    //borderColor: 'grey',
+    //borderWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 
   activityList: {
     width: '100%',
-    backgroundColor: 'white'
+    height: '100%',
+    backgroundColor: '#323F4E',
   },
   separator: {
     backgroundColor: "#ececec",

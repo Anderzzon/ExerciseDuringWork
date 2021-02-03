@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, HeaderStyleInterpolators } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 import ListView from '../screens/List';
 import Detail from '../screens/Detail'
 import Overview from '../screens/Overview';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const ExcercisesStack = createStackNavigator();
 const ExcercisesStackScreen = () => {
@@ -16,8 +17,13 @@ const ExcercisesStackScreen = () => {
       name = "ListView" 
       component = {ListView} 
       options = {{
-        headerTitle: 'List of activities'
+        headerTitle: 'List of activities',
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#566D87'
+        }
       }}
+      
       />
       <ExcercisesStack.Screen 
       name = "Detail" 
@@ -25,7 +31,11 @@ const ExcercisesStackScreen = () => {
       options = {({ route }) => {
         return {
             headerTitle: `${route.params.item.name}`,
-            headerBackTitle: "Back"
+            headerTintColor: 'white',
+            headerBackTitle: "Back",
+            headerStyle: {
+              backgroundColor: '#566D87'
+            }
         }
       }
       
@@ -42,7 +52,7 @@ const ExcercisesStackScreen = () => {
         screenOptions= {({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-
+            
             if (route.name === 'Exercises') {
               iconName = focused
               ? 'body'
@@ -53,6 +63,13 @@ const ExcercisesStackScreen = () => {
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'white',
+          style: {
+            backgroundColor: '#566D87'
+          }
+        }}
         >
           <Tab.Screen name = "Exercises" component = {ExcercisesStackScreen}/>
           <Tab.Screen name = "Overview" component = {Overview} />

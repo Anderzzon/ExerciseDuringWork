@@ -48,14 +48,17 @@ export default ({ route, navigation }) => {
       { cancelable: false }
     );
 
-  const item  = route.params.item
+  var item  = route.params.item
+  //const fetch = route.params.fetchExercise
+  console.log("Fetch", fetch)
   const [entity, setEntity] = useState({
       gif: "https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif",
       name: "",
   })
+  //const [fetchExercise, setFetchExercise] = useState(fetch)
 
   const db = firebase.firestore()
-  const exercise = db.collection('Exercises').doc(item.id)
+  let exercise = db.collection('Exercises').doc(item.id)
   const heightToUse = height-80
 
     const [duration, setDuration] = useState(10);
@@ -63,6 +66,30 @@ export default ({ route, navigation }) => {
     const timerAnimation = useRef(new Animated.Value(heightToUse)).current;
     const textInputAnimation = useRef(new Animated.Value(0)).current;
     const buttonAnimation = useRef(new Animated.Value(0)).current;
+    useEffect(() => {
+      // if(fetchExercise) {
+        console.log("Fetching")
+        //console.log("exerciseToFetch", exerciseToFetch)
+        exercise.get()
+        .then((doc) => {
+          if (doc.exists) {
+            setEntity({
+              gif: doc.data().gif,
+              name: doc.data().name
+            })
+            console.log("Entitiy after fetch", entity)
+            console.log("Item: ", route.params.item)
+            //setFetchExercise(false)
+            //console.log("Fetch inside fetch:", fetchExercise)
+          }
+        }).catch((error) => {
+          console.log("Error getting document:", error);
+      });
+      //console.log("Fetch after", fetchExercise)
+      // } else {
+      //   console.log("No fetch")
+      // }
+    }, [item])
 
     useEffect(() => {
       const listener = textInputAnimation.addListener(({value}) => {
@@ -128,21 +155,20 @@ export default ({ route, navigation }) => {
       outputRange: [0, 200]
     })
 
-    useEffect(() => {
-      exercise
-        .onSnapshot(
-          doc => {
-            //setEntity(doc.data())
-            setEntity({
-              gif: doc.data().gif,
-              name: doc.data().name
-            })
-          }
-        )
-    }, [])
+    // useEffect(() => {
+    //   exercise
+    //     .onSnapshot(
+    //       doc => {
+    //         //setEntity(doc.data())
+    //         setEntity({
+    //           gif: doc.data().gif,
+    //           name: doc.data().name
+    //         })
+    //       }
+    //     )
+    // }, [])
 
     //console.log("Item", {activity})
-    console.log("Route: ", {route} )
 
     return(
       <View style = {styles.container}>

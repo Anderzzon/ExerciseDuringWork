@@ -39,7 +39,8 @@ export default function App() {
           item: {
             name: data.name,
             id: data.exercise
-          }
+          },
+          //fetchExercise: true
         })
       }
     }, [] );

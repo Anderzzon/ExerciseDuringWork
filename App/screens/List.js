@@ -146,7 +146,8 @@ export default ({ navigation }) => {
           id={item.id}
           onPress={() => {
             navigation.navigate('Detail', {
-              item: item
+              item: item,
+              //fetchExercise: true
             })
             console.log("ID:", item.id)
           }}

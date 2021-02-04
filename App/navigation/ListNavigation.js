@@ -9,6 +9,25 @@ import Detail from '../screens/Detail'
 import Overview from '../screens/Overview';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
+const OverviewStack = createStackNavigator();
+const OverviewStackScreen = () => {
+  return (
+    <OverviewStack.Navigator>
+      <OverviewStack.Screen 
+      name="Overview" 
+      component= {Overview}
+      options = {{
+        headerTitle: 'Overview',
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#566D87'
+        }
+      }} 
+      />
+    </OverviewStack.Navigator>
+  )
+}
+
 const ExcercisesStack = createStackNavigator();
 const ExcercisesStackScreen = () => {
     return(
@@ -38,7 +57,6 @@ const ExcercisesStackScreen = () => {
             }
         }
       }
-      
     }
       />
     </ExcercisesStack.Navigator>
@@ -72,7 +90,7 @@ const ExcercisesStackScreen = () => {
         }}
         >
           <Tab.Screen name = "Exercises" component = {ExcercisesStackScreen}/>
-          <Tab.Screen name = "Overview" component = {Overview} />
+          <Tab.Screen name = "Overview" component = {OverviewStackScreen} />
         </Tab.Navigator>
       )
   }

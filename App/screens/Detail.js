@@ -136,8 +136,7 @@ export default ({ route, navigation }) => {
             //setEntity(doc.data())
             setEntity({
               gif: doc.data().gif,
-              name: doc.data().name,
-              description: doc.data().description
+              name: doc.data().name
             })
           }
         )
@@ -158,7 +157,7 @@ export default ({ route, navigation }) => {
             }]            
           }]}
         />
-        <Text style= {{color: 'white', fontSize: 20}}>{entity.description} </Text>
+        <Text style= {{color: 'white'}}>Detail of the activity with title: {entity.name} </Text>
 
         <Image source={{uri: `${entity.gif}`}}
         style={{width: 300, 
@@ -212,8 +211,7 @@ export default ({ route, navigation }) => {
       backgroundColor: '#323F4E',
       alignItems: 'center',
       justifyContent: 'center',
-      alignContent: 'space-between',
-      padding: 20
+      alignContent: 'space-between'
     },
 
     countDown: {

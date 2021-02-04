@@ -132,6 +132,7 @@ export default ({ route, navigation }) => {
       exercise
         .onSnapshot(
           doc => {
+            console.log("Data fetched")
             //setEntity(doc.data())
             setEntity({
               gif: doc.data().gif,

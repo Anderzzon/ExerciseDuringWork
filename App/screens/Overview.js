@@ -1,5 +1,6 @@
 import React from "react";
 import { SafeAreaView, Text, StyleSheet, Dimensions } from "react-native";
+import { AuthContext } from '../context/AuthContext';
 import {
   LineChart,
   BarChart,
@@ -10,6 +11,26 @@ import {
 } from "react-native-chart-kit";
 
 export default () => {
+  const { user } = useContext(AuthContext);
+  const db = firebase.firestore()
+  const exerciseData = db.collection('Users').doc(user.uid).collection("Completed")
+  const [entities, setEntities] = useState([])
+
+  useEffect(() => {
+    exerciseData
+      .onSnapshot(
+        snapshot => {
+          const newEntities = []
+          snapshot.forEach(doc => {
+            const entity = doc.data()
+            entity.id = doc.id
+            newEntities.push(entity)
+          })
+          setEntities(newEntities)
+        }
+      )
+  }, [])
+
     return (
       <SafeAreaView style = {styles.container}>
         <LineChart

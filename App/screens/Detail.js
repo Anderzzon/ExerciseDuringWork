@@ -1,25 +1,11 @@
 import React, {useContext, useEffect} from "react";
 import { Text, SafeAreaView, StyleSheet, View, Image, Animated, Dimensions, TouchableOpacity, TextInput, Easing, StatusBar, Alert } from "react-native";
 import { useState } from "react";
-import { exercises } from "../../firebaseConfig";
 import {firebase} from '../../firebaseConfig'
 import { useRef } from "react";
-import { color } from "react-native-reanimated";
 import { useCallback } from "react";
 import { AuthContext } from '../context/AuthContext';
-import { State } from "react-native-gesture-handler";
 let { width, height } = Dimensions.get('window');
-
-// export default ({ route }) => {
-
-//     //const info = route.params.id
-
-//     return (
-//       <SafeAreaView style= {styles.container}>
-//         <DetailView route = {route}/>
-//       </SafeAreaView>
-//     )
-// }
 
 export default ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
@@ -54,6 +40,7 @@ export default ({ route, navigation }) => {
   const [entity, setEntity] = useState({
       gif: "https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif",
       name: "",
+      description: ""
   })
   //const [fetchExercise, setFetchExercise] = useState(fetch)
 
@@ -61,7 +48,7 @@ export default ({ route, navigation }) => {
   let exercise = db.collection('Exercises').doc(item.id)
   const heightToUse = height-80
 
-    const [duration, setDuration] = useState(10);
+    const [duration, setDuration] = useState(120);
     const inputRef = useRef()
     const timerAnimation = useRef(new Animated.Value(heightToUse)).current;
     const textInputAnimation = useRef(new Animated.Value(0)).current;
@@ -75,7 +62,8 @@ export default ({ route, navigation }) => {
           if (doc.exists) {
             setEntity({
               gif: doc.data().gif,
-              name: doc.data().name
+              name: doc.data().name,
+              description: doc.data().description
             })
             console.log("Entitiy after fetch", entity)
             console.log("Item: ", route.params.item)
@@ -154,21 +142,6 @@ export default ({ route, navigation }) => {
       inputRange: [0, 1],
       outputRange: [0, 200]
     })
-
-    // useEffect(() => {
-    //   exercise
-    //     .onSnapshot(
-    //       doc => {
-    //         //setEntity(doc.data())
-    //         setEntity({
-    //           gif: doc.data().gif,
-    //           name: doc.data().name
-    //         })
-    //       }
-    //     )
-    // }, [])
-
-    //console.log("Item", {activity})
 
     return(
       <View style = {styles.container}>

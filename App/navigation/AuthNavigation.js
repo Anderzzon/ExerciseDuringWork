@@ -8,7 +8,7 @@ import Splash from '../screens/Splash'
 import { navigationRef } from './RootNavigation';
 
 export default function AuthNavigation() {
-  const { isLoading, isLoggedIn, user, exerciseFromNotification } = useContext(AuthContext);
+  const { isLoading, user } = useContext(AuthContext);
 
   if (isLoading) {
     return <Splash/>

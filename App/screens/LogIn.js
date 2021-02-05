@@ -10,8 +10,6 @@ export default function LogIn({ navigation }) {
   const { logIn } = useContext(AuthContext);
 
   const submit = () => {
-    // navigation.navigate('Home');
-    // setIsLoggedIn(true);
     console.log('submitting log in');
     logIn(email, password);
   };

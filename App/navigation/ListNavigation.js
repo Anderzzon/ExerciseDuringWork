@@ -36,7 +36,7 @@ const ExcercisesStackScreen = () => {
       name = "ListView" 
       component = {ListView} 
       options = {{
-        headerTitle: 'List of activities',
+        headerTitle: 'All activities',
         headerTintColor: 'white',
         headerStyle: {
           backgroundColor: '#566D87'

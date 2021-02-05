@@ -49,15 +49,12 @@ export default ({ route, navigation }) => {
     );
 
   var item = route.params.item;
-  //const fetch = route.params.fetchExercise
-  console.log('Fetch', fetch);
   const [entity, setEntity] = useState({
     gif:
       'https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif',
     name: '',
     description: '',
   });
-  //const [fetchExercise, setFetchExercise] = useState(fetch)
   const heightToUse = height - 80;
 
   const [duration, setDuration] = useState(10);
@@ -65,6 +62,7 @@ export default ({ route, navigation }) => {
   const timerAnimation = useRef(new Animated.Value(heightToUse)).current;
   const textInputAnimation = useRef(new Animated.Value(0)).current;
   const buttonAnimation = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     const db = firebase.firestore();
     let exercise = db.collection('Exercises').doc(item.id);

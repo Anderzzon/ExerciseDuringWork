@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 
 export default function Splash() {
   return (
     <View style={styles.container}>
-      <Text>Splash</Text>
+      <ActivityIndicator animating={true} size="small" hidesWhenStopped />
     </View>
   );
 }

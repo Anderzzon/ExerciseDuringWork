@@ -21,7 +21,6 @@ export default function AuthContextProvider({ children }) {
   const logIn = async () => {
     console.log('calling log in ');
     try {
-      //await auth.signInWithEmailAndPassword(email, password);
       await auth.signInAnonymously();
       console.log('logIn ');
     } catch (error) {

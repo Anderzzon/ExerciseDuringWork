@@ -1,64 +1,22 @@
 import React, { useEffect } from 'react';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 
 export default function LogIn({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const { logIn } = useContext(AuthContext);
-
-  const submit = () => {
-    console.log('submitting log in');
-    logIn(email, password);
-  };
 
   useEffect(() => {
     logIn();
   });
 
-  return (
-    <View style={styles.container}>
-      <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>
-        Log In
-      </Text>
-      <View style={{ width: '50%' }}>
-        <Text style={{ fontWeight: '600', fontSize: 16 }}>Email</Text>
-        <TextInput
-          placeholder="Enter email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          style={{
-            backgroundColor: 'lightgrey',
-            padding: 10,
-            borderRadius: 5,
-            marginBottom: 10,
-          }}
-        />
-        <Text style={{ fontWeight: '600', fontSize: 16 }}>Password</Text>
-        <TextInput
-          placeholder="Enter password"
-          value={password}
-          keyboardType="visible-password"
-          autoCorrect={false}
-          autoCapitalize="none"
-          onChangeText={setPassword}
-          style={{ backgroundColor: 'lightgrey', padding: 10, borderRadius: 5 }}
-        />
-        <Button title="Submit" onPress={submit} />
-      </View>
-    </View>
-  );
+  return <View style={styles.container} />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#323F4E',
     alignItems: 'center',
     justifyContent: 'center',
   },

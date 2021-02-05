@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState, useContext } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
@@ -14,6 +14,10 @@ export default function LogIn({ navigation }) {
     logIn(email, password);
   };
 
+  useEffect(() => {
+    logIn();
+  });
+
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>
@@ -25,9 +29,9 @@ export default function LogIn({ navigation }) {
           placeholder="Enter email"
           value={email}
           onChangeText={setEmail}
-          keyboardType= 'email-address'
-          autoCapitalize= 'none'
-          autoCorrect= {false}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
           style={{
             backgroundColor: 'lightgrey',
             padding: 10,
@@ -39,9 +43,9 @@ export default function LogIn({ navigation }) {
         <TextInput
           placeholder="Enter password"
           value={password}
-          keyboardType = 'visible-password'
-          autoCorrect= {false}
-          autoCapitalize= 'none'
+          keyboardType="visible-password"
+          autoCorrect={false}
+          autoCapitalize="none"
           onChangeText={setPassword}
           style={{ backgroundColor: 'lightgrey', padding: 10, borderRadius: 5 }}
         />
@@ -59,4 +63,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-

@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function Splash() {
-
   return (
     <View style={styles.container}>
       <Text>Splash</Text>

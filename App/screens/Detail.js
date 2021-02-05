@@ -10,7 +10,7 @@ let { width, height } = Dimensions.get('window');
 export default ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
 
-  const saveCompletedExersice = (exercise) => {
+  const saveCompletedExersice = () => {
     let date = new Date()
     let ref = db.collection("Users").doc(user.uid).collection("Completed").add({
       date: date,
@@ -23,7 +23,7 @@ export default ({ route, navigation }) => {
   });
   }
 
-  const createTwoButtonAlert = () =>
+  const createAlert = () =>
     Alert.alert(
       "Done",
       "Great job! Now, get back to work!",
@@ -48,15 +48,12 @@ export default ({ route, navigation }) => {
   let exercise = db.collection('Exercises').doc(item.id)
   const heightToUse = height-80
 
-    const [duration, setDuration] = useState(120);
+    const [duration, setDuration] = useState(10);
     const inputRef = useRef()
     const timerAnimation = useRef(new Animated.Value(heightToUse)).current;
     const textInputAnimation = useRef(new Animated.Value(0)).current;
     const buttonAnimation = useRef(new Animated.Value(0)).current;
     useEffect(() => {
-      // if(fetchExercise) {
-        console.log("Fetching")
-        //console.log("exerciseToFetch", exerciseToFetch)
         exercise.get()
         .then((doc) => {
           if (doc.exists) {
@@ -67,16 +64,10 @@ export default ({ route, navigation }) => {
             })
             console.log("Entitiy after fetch", entity)
             console.log("Item: ", route.params.item)
-            //setFetchExercise(false)
-            //console.log("Fetch inside fetch:", fetchExercise)
           }
         }).catch((error) => {
           console.log("Error getting document:", error);
       });
-      //console.log("Fetch after", fetchExercise)
-      // } else {
-      //   console.log("No fetch")
-      // }
     }, [item])
 
     useEffect(() => {
@@ -121,8 +112,8 @@ export default ({ route, navigation }) => {
       ]).start(() => {
         let value = Number.parseInt(JSON.stringify(textInputAnimation)) //Set value for when an exercise should be considered finished
           if (value <=5 ) {
-          saveCompletedExersice(entity)
-          createTwoButtonAlert()
+          saveCompletedExersice()
+          createAlert()
         }
         textInputAnimation.setValue(duration)
         
@@ -193,8 +184,6 @@ export default ({ route, navigation }) => {
             style={styles.roundButton}>
               <Text style= {{color: 'white', fontSize: 22, fontWeight: '800'}}>Start</Text>
             </View>
-            
-          
         </TouchableOpacity>
       </Animated.View>
       </View>

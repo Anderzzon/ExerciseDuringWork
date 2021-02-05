@@ -8,15 +8,6 @@ import { AuthContext } from '../context/AuthContext';
 
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import { color } from "react-native-reanimated";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
 
 const ListItem = ({ title, image, id, description, onPress }) => {
   return (
@@ -50,74 +41,10 @@ export default ({ navigation }) => {
   const { user } = useContext(AuthContext);
 
   const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
-//   const createTwoButtonAlert = (data) => {
-//   Alert.alert(
-//     "Alert Title",
-//     "My Alert Msg",
-//     [
-//       {
-//         text: "Cancel",
-//         onPress: () => console.log("Cancel Pressed"),
-//         style: "cancel"
-//       },
-//       { text: "OK", onPress: () => 
-
-//                   navigation.navigate('Detail', {
-//               item: {
-//                 name: data.name,
-//                 id: data.exercise
-//               }
-//             }),
-//             style: "default" 
-//     }
-//     ],
-//     { cancelable: false }
-//   )
-// }
 
   useEffect(() => {
     registerForPushNotificationsAsync(user, db).then(token => setExpoPushToken(token))
   }, []);
-
-  // useEffect(() => {
-  //   // This listener is fired whenever a notification is received while the app is foregrounded
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(notificationData => {
-  //     setNotification(notificationData);
-  //     console.log("Notification:", notification)
-  //     if (notification) {
-  //       createTwoButtonAlert(notificationData.request.content.data)
-  //       console.log("!!! Heh")
-  //     } else {
-  //       console.log("No notification data")
-  //     }
-
-  //   }, []);
-
-  //   // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-  //     //console.log("!!!Received response Context:", response);
-  //     let data = response.notification.request.content.data
-  //     //console.log("Exercise ID: ", data)
-  //     if (data.exercise) {
-  //       //console.log(data.exercise)
-  //       navigation.navigate('Detail', {
-  //         item: {
-  //           name: data.name,
-  //           id: data.exercise
-  //         }
-  //       })
-  //     }
-  //   }, [] );
-
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener);
-  //     Notifications.removeNotificationSubscription(responseListener);
-  //   };
-  // }, []);
 
   useEffect(() => {
     exercises
@@ -162,10 +89,8 @@ export default ({ navigation }) => {
 }
 
 async function registerForPushNotificationsAsync(user, db) {
-  console.log("Getting token")
   let token;
   if (Constants.isDevice) {
-    console.log("Constants")
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
@@ -177,10 +102,7 @@ async function registerForPushNotificationsAsync(user, db) {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Push token", token)
-
       var userToUpdate = db.collection("Users").doc(user.uid)
-
       var setWithMerge = userToUpdate.set({
         push_token: token
       }, { merge: true } )
@@ -197,12 +119,9 @@ const styles = StyleSheet.create({
   },
 
   listItem: {
-    //width: '100%',
     alignContent: 'flex-start',
     padding: 20,
     margin: 5,
-    //borderColor: 'grey',
-    //borderWidth: 2,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

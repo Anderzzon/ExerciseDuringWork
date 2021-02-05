@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import AuthNavigation from './App/navigation/AuthNavigation';
 import AuthContextProvider from './App/context/AuthContext';
@@ -30,17 +30,13 @@ export default function App() {
   
    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      //console.log("!!!Received response Context:", response);
       let data = response.notification.request.content.data
-      //console.log("Exercise ID: ", data)
       if (data.exercise) {
-        //console.log(data.exercise)
         RootNavigation.navigate('Detail', {
           item: {
             name: data.name,
             id: data.exercise
           },
-          //fetchExercise: true
         })
       }
     }, [] );

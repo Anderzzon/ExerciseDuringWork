@@ -20,10 +20,6 @@ var firebaseConfig = {
 
     firebase.initializeApp(firebaseConfig);
 }
-  
-  //firebase.analytics();
-
-  //const db = firebase.firestore(firebaseApp)
 
   export const db = firebase.firestore()
   export const exercises = db.collection('Exercises')
@@ -31,10 +27,3 @@ var firebaseConfig = {
   export const auth = firebase.auth();
 
   export { firebase };
-
-  // exercises.onSnapshot(function(snapshot) {
-  //   snapshot.forEach(function(doc){
-  //     console.log("!!!Current data: ", doc.data())
-  //     console.log("!!!Current ID: ", doc.id)
-  //   })
-  // })
